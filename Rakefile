@@ -56,7 +56,7 @@ end
 desc "submit job scripts to SGE"
 task :sge_submit_jobs do
   FileList["#{DIR_BATCH_SCRIPTS}/*.job*.sh"].each do |f|
-    sh "qsub -V PATH #{f}"
+    sh "qsub -V #{f}"
   end
 end
 
