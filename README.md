@@ -61,7 +61,7 @@ This distribution of batch-iprscan-bias provides a set of protein test sequences
 
 Edit ''conf.yml''. 
 
-<code>
+```
 query: test/test_pep.fasta
 num_fasta_per_subfile: 10
 
@@ -69,16 +69,16 @@ interproscan_dir:  ~/bio/applications/interproscan-5.19-58.0/
 
 batch_script_template:     templates/run_interproscan.sh.template
 batch_script_template_sge: templates/sge.bias.small
-</code>
+```
 
 Then run Rake.
 
-<code>
+```
 $  rake build_batch_template
 $  rake split_query
 $  rake generate_batch_jobs
 $  rake sge_submit_jobs
-</code>
+```
 
 ## License
 
