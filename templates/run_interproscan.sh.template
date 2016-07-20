@@ -1,0 +1,15 @@
+#!/bin/sh
+
+## SGE Parameters
+%SGE_PART%
+
+QUERY=%FASTAF%
+
+INTERPROSCAN=%INTERPROSCAN_DIR%/interproscan.sh
+
+$INTERPROSCAN  \
+  -i $QUERY \
+  -f XML,TSV \
+  --disable-precalc \
+  --goterms \
+  --pathways \

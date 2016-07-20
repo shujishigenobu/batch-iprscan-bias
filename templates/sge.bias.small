@@ -1,0 +1,9 @@
+#$ -S /bin/bash
+#$ -q small
+#$ -pe smp 4
+#$ -cwd
+
+export PATH=/home/shige/Applications/jre1.8.0_91/bin:$PATH
+export LD_LIBRARY_PATH=/home/shige/local/lib64:$LD_LIBRARY_PATH
+
+

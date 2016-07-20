@@ -1,0 +1,7 @@
+query: test.pep.fa
+num_fasta_per_subfile: 100
+
+interproscan_dir:  ~/bio/applications/interproscan-5.19-58.0/
+
+batch_script_template:     templates/run_interproscan.sh.template
+batch_script_template_sge: templates/sge.bias.small
