@@ -56,7 +56,29 @@ Now your jobs are queued. Monitor your jobs by SGE command like `qstat`.
 
 not implemented yet.
 
+## Test run
+This distribution of batch-iprscan-bias provides a set of protein test sequences, which you can use to check how ''batch-iprscan-bias''  behaves on your system. The test protein sequences are stored as a single fasta file, ''test/test_pep.fasta''.  Run ''batch-iprscan-bias'' as follows:
 
+Edit ''conf.yml''. 
+
+<code>
+query: test/test_pep.fasta
+num_fasta_per_subfile: 10
+
+interproscan_dir:  ~/bio/applications/interproscan-5.19-58.0/
+
+batch_script_template:     templates/run_interproscan.sh.template
+batch_script_template_sge: templates/sge.bias.small
+</code>
+
+Then run Rake.
+
+<code>
+$  rake build_batch_template
+$  rake split_query
+$  rake generate_batch_jobs
+$  rake sge_submit_jobs
+</code>
 
 ## License
 
