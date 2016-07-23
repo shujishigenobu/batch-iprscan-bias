@@ -61,71 +61,92 @@ task :sge_submit_jobs do
 end
 
 
-# NOT IMPLEMENTED YET
-#desc "SGE result checking"
-#task :postchk_sge => DIR_SGE_LOGS do |t|
-#  result_files = FileList["fasta_split/*[0-9].fasta"].map{|f| File.basename(f) + suffix}
-#  result_files.each do |f|
-#    unless File.exists?("#{f}.finished")
-#      raise "ERROR: the following job has not been completed. \n#{f} "
-#    end
-#  end
-#
-#  FileList["#{DIR_BATCH_SCRIPTS}/*.job*.sh"].each do |f|
-#    logs = FileList["#{File.basename(f)}.*"]
-#    sh "mv #{logs.join(' ')}  #{DIR_SGE_LOGS}"
-#  end
-#end
+desc "SGE result checking"
+task :postchk_sge => DIR_SGE_LOGS do |t|
+  queries = []
+  File.open("run_iprscan_batch.list").each do |l|
+    next if /^\#/.match(l)
+    queries << l.chomp.split(/\//)[-1]
+  end
+
+  queries.each do |q|
+    unless File.exists?("#{q}.iprscan.finished")
+      raise "ERROR: the following job has not been completed. \n#{q} "
+    end
+  end
+
+  FileList["#{DIR_BATCH_SCRIPTS}/*.job*.sh"].each do |f|
+    logs = FileList["#{File.basename(f)}.*"]
+    sh "mv #{logs.join(' ')}  #{DIR_SGE_LOGS}"
+  end
+end
+
+
+desc "combine batch results into a single file"
+task :combine_blast_results do
+  queries = []
+  File.open("run_iprscan_batch.list").each do |l|
+    next if /^\#/.match(l)
+    queries << l.chomp.split(/\//)[-1]
+  end
+
+p queries
+
+  queries_sorted = queries.sort{|a, b|
+    ma = /_(\d+)\.fasta$/.match(a)
+    num_a = ma[1].to_i
+    mb = /_(\d+)\.fasta$/.match(b)
+    num_b = ma[1].to_i
+    num_a <=> num_b
+  }
+  p queries_sorted
+
+  puts "#{queries_sorted.size} queries."
+
+  outf_xml = queries_sorted[0].dup.sub(/_1.fasta/, '.iprscan.xml')
+  outf_tsv = queries_sorted[0].dup.sub(/_1.fasta/, '.iprscan.tsv')
+
+  o_xml = File.open(outf_xml, "w")
+  o_tsv = File.open(outf_tsv, "w")
+
+  queries_sorted.each do |q|
+    xml = "#{q}.xml"
+    tsv = "#{q}.tsv"
+    o_xml.puts File.open(xml).read
+    o_tsv.puts File.open(tsv).read
+  end
+
+  puts "saved in #{outf_xml}"
+  puts "saved in #{outf_tsv}"
+
+end
+
+
+#test_pep.fasta_6.fasta.iprscan.finished
+#test_pep.fasta_6.fasta.tsv
+#test_pep.fasta_6.fasta.xml
 
 # NOT IMPLEMENTED YET
-#desc "combine batch results into a single file"
-#task :combine_blast_results do
-#  result_files = FileList["fasta_split/*[0-9].fasta"].map{|f| File.basename(f) + suffix}
-#  result_files_sorted = result_files.sort{|a, b|
-#    ma = /\d+\.fasta#{suffix}/.match(a)
-#    num_a = ma[1].to_i
-#    mb = /\d+\.fasta#{suffix}/.match(b)
-#    num_b = mb[1].to_i
-#    num_a <=> num_b
-#  }
-#  p result_files_sorted
-#  puts "#{result_files_sorted.size} files found."
-
-#  outf = result_files_sorted[0].dup.sub(/_1.fasta/, '_ALL.fasta')
-
-#  File.open(outf, "w") do |o|
-#    result_files_sorted.each do |f|
-#      o.puts File.open(f).read
-#    end
-#  end
-#  puts "saved in #{outf}"
-#end
-
-# NOT IMPLEMENTED YET
-#desc "Final check and cleaning"
-#task :finalize do |t|
-#  blast_results_combined = FileList["*_ALL.fasta.vs.*blast*.txt"].first
+desc "Final check and cleaning"
+task :finalize do |t|
 
 #  unless blast_results_combined
 #    raise "combined blast result file has not been generated."
 #  end
-#  num_records = 0
-#  File.open(blast_results_combined).each do |l|
-#    num_records += 1 if /^\# T*BLAST[NXP] \d/.match(l)
-#  end
 
-#  num_fasta = 0
-#  File.open(query).each do |l|
-#    num_fasta += 1 if /^>/.match(l)
-#  end
+  queries = []
+  File.open("run_iprscan_batch.list").each do |l|
+    next if /^\#/.match(l)
+    queries << l.chomp.split(/\//)[-1]
+  end
 
-#  if  num_fasta == num_records
-#    sh "rm #{query}_[0-9]*.txt"
-#    sh "rm #{query}_[0-9]*.txt.finished"
-#    puts "#{blast_results_combined} looks good. BLAST search and post-processing completed."
-#  else
-#    raise "ERROR: the number of records is inconsistent between  #{blast_results_combined} and #{query}."
-#  end
+p queries
+  queries.each do |q|
+  p q
+    sh "rm #{q}.tsv"
+    sh "rm #{q}.xml"
+    sh "rm #{q}.iprscan.finished"
+  end
 
 
-#end
+end

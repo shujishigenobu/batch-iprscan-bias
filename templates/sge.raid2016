@@ -1,0 +1,5 @@
+#$ -S /bin/bash
+#$ -q all.q
+#$ -l nc=2
+#$ -cwd
+
