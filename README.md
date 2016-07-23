@@ -17,6 +17,11 @@ Download `batch-iprscan-bias` package from GitHub (https://github.com/shujishige
 ```bash
 $ git clone git@github.com:shujishigenobu/batch-iprscan-bias.git
 ```
+or
+
+```bash
+$ git clone https://github.com/shujishigenobu/batch-iprscan-bias.git
+```
 
 ### 2) Prepare coniguration file, conf.yml
 
@@ -54,7 +59,10 @@ Now your jobs are queued. Monitor your jobs by SGE command like `qstat`.
 
 ### 4) 3 steps for combine InterProScan results
 
-not implemented yet.
+$  rake postchk_sge
+$  rake combine_blast_results
+$  rake finalize
+
 
 ## Test run
 This distribution of batch-iprscan-bias provides a set of protein test sequences, which you can use to check how ''batch-iprscan-bias''  behaves on your system. The test protein sequences are stored as a single fasta file, ''test/test_pep.fasta''.  Run ''batch-iprscan-bias'' as follows:
@@ -78,6 +86,10 @@ $  rake build_batch_template
 $  rake split_query
 $  rake generate_batch_jobs
 $  rake sge_submit_jobs
+(wait until all jobs are finished)
+$  rake postchk_sge
+$  rake combine_blast_results
+$  rake	finalize
 ```
 
 ## License

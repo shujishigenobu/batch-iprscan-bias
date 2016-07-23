@@ -3,6 +3,10 @@
 ## SGE Parameters
 %SGE_PART%
 
+set -e
+set -u
+set -o pipefail
+
 QUERY=%FASTAF%
 
 INTERPROSCAN=%INTERPROSCAN_DIR%/interproscan.sh
@@ -13,3 +17,5 @@ $INTERPROSCAN  \
   --disable-precalc \
   --goterms \
   --pathways \
+
+touch `basename $QUERY`.iprscan.finished
