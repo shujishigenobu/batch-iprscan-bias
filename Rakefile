@@ -40,7 +40,7 @@ desc "split query fasta files"
 task :split_query do
   puts "split_query"
 
-  sh "ruby util/split_fasta.rb #{query} #{num_fasta_per_subfile} #{DIR_FASTA_SPLIT}"
+  sh "ruby util/split_and_clean_fasta.rb #{query} #{num_fasta_per_subfile} #{DIR_FASTA_SPLIT}"
 end
 
 
