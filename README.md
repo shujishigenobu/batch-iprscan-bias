@@ -59,10 +59,11 @@ Now your jobs are queued. Monitor your jobs by SGE command like `qstat`.
 
 ### 4) 3 steps for combine InterProScan results
 
+```
 $  rake postchk_sge
 $  rake combine_blast_results
 $  rake finalize
-
+```
 
 ## Test run
 This distribution of batch-iprscan-bias provides a set of protein test sequences, which you can use to check how ''batch-iprscan-bias''  behaves on your system. The test protein sequences are stored as a single fasta file, ''test/test_pep.fasta''.  Run ''batch-iprscan-bias'' as follows:
